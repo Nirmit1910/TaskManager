@@ -1,26 +1,25 @@
 {
-  "name": "jobs",
+  "name": "starter",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "engines": {
-   "node": "11.0.0",
-   "npm":  "6.4.1"
-   },
-  "scripts": {
-    "start": "node app.js",
-    "start:dev": "nodemon app.js" 
+    "node": "11.0.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
+    "dependencies": "^0.0.1",
     "dotenv": "^8.6.0",
     "express": "^4.18.1",
+    "missing": "0.0.1",
     "mongoose": "^5.13.14"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
-  }
+  },
+  "scripts": {
+    "starts": "nodemmon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
