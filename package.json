@@ -17,7 +17,7 @@
     "nodemon": "^2.0.7"
   },
   "scripts": {
-    "start": "nodemmon app.js"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
