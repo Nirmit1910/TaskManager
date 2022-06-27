@@ -42,7 +42,7 @@ const updateTask =asyncWrapper (async (req, res,next) => {
     });
     console.log(tasks);
     if(!tasks){
-        return next(createCustomError(`No task with id : ${taskID}`, 404))
+        return next(createCustomError(`No task with id : ${id}`, 404))
     }
     res.json({tasks});
 })
