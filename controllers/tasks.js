@@ -1,76 +1,51 @@
 const Task=require('../models/tasks');
+const asyncWrapper=require('../middleware/async');
+const { createCustomError } = require('../errors/custom-error')
+const getAllTasks =asyncWrapper (async (req, res) => {
+    const tasks=await Task.find();
+    res.status(200).json({tasks,amount:tasks.length});
+})
 
-const getAllTasks =async (req, res) => {
-    try{
-        const tasks=await Task.find();
-        res.json(tasks);
-    }
-    catch(err){
-        res.json({message:err});
-    }
-}
+const createTasks =asyncWrapper( async (req, res) => {
+    const task=await Task.create(req.body);
+    res.status(201).json({task});
+})
 
-const createTasks =async (req, res) => {
-    try{
-        const task=await Task.create(req.body);
-        // Task.save(task);
-        res.status(201).json({task});
+const getTask =asyncWrapper (async (req, res,next)=>{
+    const id=req.params.id;
+    const tasks=await Task.findById(id);
+    console.log(req.params.id);
+    if(!tasks){
+        return next(createCustomError(`No task with id : ${taskID}`, 404))
     }
-    catch(err){
-        res.status(400).json({err});
-    }
-}
-
-const getTask =async (req, res)=>{
-    try{
-        const id=req.params.id;
-        const tasks=await Task.findById(id);
-        console.log(req.params.id);
-        if(tasks==null){
-           return res.status(404).json({message:"Task not found"});
-        }
-        res.json({tasks});
-    }
-    catch(err){
-        res.json({message:err});
-    }
-}
+    res.json({tasks});
+})
 
 
-const deleteTask =async (req, res) => {
-    try{
-        const id=req.params.id;
-        console.log(id);
-        const tasks=await Task.findByIdAndDelete(id);
-        console.log(tasks);
-        if(tasks==false)
-        {
-            console.log("task not found");
-            return res.status(404).json({message:"Task not found"});  
-        }
-        res.json({message:"Task deleted successfully"});
+const deleteTask =asyncWrapper (async (req, res,next) => {
+    const id=req.params.id;
+    console.log(id);
+    const tasks=await Task.findByIdAndDelete(id);
+    console.log(tasks);
+    if(!tasks){
+        return next(createCustomError(`No task with id : ${taskID}`, 404))
     }
-    catch(err){
-        res.json({message:"error"});
-    }
-}
+    res.json({message:"Task deleted successfully"});
+})
 
-const updateTask =async (req, res) => {
-    try{
-        const id=req.params.id;
-        console.log(req.body);
-        const tasks=await Task.findByIdAndUpdate(id,req.body);
-        console.log(tasks);
-        if(tasks==false)
-        {
-            return res.status(404).json({messgae:"message user not found"});
-        } 
-        res.json({message:"Task updated successfully"});
+const updateTask =asyncWrapper (async (req, res,next) => {
+    const id=req.params.id;
+    console.log(req.body);
+    const tasks=await Task.findOneAndUpdate(id,req.body,{
+        new:true,
+        runValidators:true
+    });
+    console.log(tasks);
+    if(!tasks){
+        return next(createCustomError(`No task with id : ${taskID}`, 404))
     }
-    catch(err){
-        res.json({message:"error"});
-    }
-}
+    res.json({tasks});
+})
 
 
 module.exports = {getAllTasks, createTasks, getTask, updateTask, deleteTask};
